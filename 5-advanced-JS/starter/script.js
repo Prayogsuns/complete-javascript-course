@@ -114,7 +114,7 @@ c) correct answer (I would use a number for this)
 
 7. Suppose this code would be a plugin for other programmers to use in their code. So make sure that all your code is private and doesn't interfere with the other programmers code (Hint: we learned a special technique to do exactly that).
 */
-
+/*
 (function selectRandomQuestion() {
 
     var Question = function (question, answersArray, correctAnswer) {
@@ -207,21 +207,158 @@ c) correct answer (I would use a number for this)
     var answer_x = prompt("Enter the number of correct answer option:");
     question_x.printTheAnswerOutcome(answer_x);
 })();
+*/
 
-// selectRandomQuestion(questions);
+////////////////////////////////////////////////////////
+/*
+--- Expert level ---
+
+8. After you display the result, display the next random question, so that the game never ends (Hint: write a function for this and call it right after displaying the result)
+
+9. Be careful: after Task 8, the game literally never ends. So include the option to quit the game if the user writes 'exit' instead of the answer. In this case, DON'T call the function from task 8.
+
+10. Track the user's score to make the game more fun! So each time an answer is correct, add 1 point to the score (Hint: I'm going to use the power of closures for this, but you don't have to, just do this with the tools you feel more comfortable at this point).
+
+11. Display the score in the console. Use yet another method for this.
+*/
+
+(function selectRandomQuestion() {
+
+    var Question = function (question, answersArray, correctAnswer) {
+        this.question = question;
+        this.answers = answersArray;
+        this.answer = correctAnswer;
+        this.score = 1;
+    }
+
+    var question_str_1 = "When did coronavirus started?";
+    var question_str_1_answers_array = [
+        "1. Coronavirus started in december 20",
+        "2. Coronavirus started in my previous life",
+        "3. Coronavirus started in my wife's previous life",
+        "4. Coronavirus started not in my life"
+    ]
+    var question_str_1_answer = "1";
+
+    var question_str_2 = "Coronavirus is mutating virus?";
+    var question_str_2_answers_array = [
+        "1. Coronavirus is not a virus",
+        "2. Coronavirus is a computer virus",
+        "3. Coronavirus is indeed a mutating virus",
+        "4. Coronavirus is for global peace"
+    ]
+    var question_str_2_answer = "3";
+
+    var question_str_3 = "Coronavirus does not feel love?";
+    var question_str_3_answers_array = [
+        "1. Coronavirus feels love like bollywood",
+        "2. Coronavirus so full of love that it is very much attached to humans",
+        "3. Coronavirus feels sadness not love",
+        "4. Coronavirus is not human and has no emotions"
+    ]
+    var question_str_3_answer = "4";
+
+    var question_str_4 = "Coronavirus is working to clean our environment?";
+    var question_str_4_answers_array = [
+        "1. Coronavirus has reduced human activties and produce, hence it is cleaning our environment",
+        "2. Coronavirus is polically aligned to left politicians",
+        "3. Coronavirus has signed agreement with janitors",
+        "4. Coronavirus is just a virus and it has nothign to do with cleaning anything"
+    ]
+    var question_str_4_answer = "1";
+
+    var question_str_5 = "Coronavirus epidemic has become a pandemic?";
+    var question_str_5_answers_array = [
+        "1. Coronavirus has been contained to only few places",
+        "2. Coronavirus problem has actually become a pandemic",
+        "3. Coronavirus effects only rich people",
+        "4. Coronavirus effects those who go out of their home and leave their parents"
+    ]
+    var question_str_5_answer = "2";
+
+    var question_1 = new Question(question_str_1, question_str_1_answers_array, question_str_1_answer);
+    var question_2 = new Question(question_str_2, question_str_2_answers_array, question_str_2_answer);
+    var question_3 = new Question(question_str_3, question_str_3_answers_array, question_str_3_answer);
+    var question_4 = new Question(question_str_4, question_str_4_answers_array, question_str_4_answer);
+    var question_5 = new Question(question_str_5, question_str_5_answers_array, question_str_5_answer);
+
+    var questions = [
+        question_1,
+        question_2,
+        question_3,
+        question_4,
+        question_5
+    ]
+
+    var scores = [];
+
+    Question.prototype.askQuestion = function (question_number) {
+        console.log(question_number + '.', this.question)
+        for (var q = 0; q < this.answers.length; q++) {
+            console.log(this.answers[q]);
+        }
+    }
 
 
+    Question.prototype.printTheAnswerOutcome = function (answer) {
+        console.log("You entered the answer option number: " + answer);
+        if (answer === this.answer) {
+            console.log("You answer is correct.");
+            var score = this.score;
+            return function () { scores.push(score) };
+        } else {
+            console.log("You entered the wrong answer.");
+            return function () { };
+        }
+    }
 
+    function askRandomQuestion(question_x, question_number) {
+        question_x.askQuestion(question_number);
 
+        var answer_x = prompt("Enter the number of correct answer option:");
+        // console.log("answer_log" + question_number, answer_x, answer_x.length, parseInt(answer_x), typeof parseInt(answer_x));
+        if (answer_x && (answer_x.length === 1 && typeof parseInt(answer_x) === "number")) {
+            console.log("answer_log" + question_number);
+            var fillScore = question_x.printTheAnswerOutcome(answer_x);
+            fillScore()
+            return answer_x.toLowerCase();
+        }
 
+    }
+    function printLatestScore(scores) {
+        var sum = scores.reduce(function (a, b) {
 
+            return a + b;
 
+        }, 0);
 
+        console.log("Latest score: ", sum);
+    }
 
+    function keepAskingRandomQuestions(questions) {
+        var l = -1;
 
+        for (var i = -1; ;) {
+            var rand_n = Math.floor(Math.random() * questions.length);
+            if (rand_n != l) {
+                i++;
+                var question_x = questions[rand_n];
 
+                var answer = askRandomQuestion(question_x, i + 1);
+                printLatestScore(scores);
 
+                if (!answer) {
+                    break
+                }
 
+                l = rand_n;
+            }
+        }
 
+    }
+
+    keepAskingRandomQuestions(questions);
+
+})();
 
 
