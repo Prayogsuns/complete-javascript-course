@@ -228,7 +228,7 @@ c) correct answer (I would use a number for this)
         this.question = question;
         this.answers = answersArray;
         this.answer = correctAnswer;
-        this.score = 1;
+        // this.score = 1;
     }
 
     var question_str_1 = "When did coronavirus started?";
@@ -301,45 +301,47 @@ c) correct answer (I would use a number for this)
 
     Question.prototype.printTheAnswerOutcome = function (answer) {
         console.log("You entered the answer option number: " + answer);
-        //var score = 0;
+        var score = 0;
         if (answer === this.answer) {
             console.log("You answer is correct.");
-            //score = this.score;
+            score = 1;
         } else {
-            console.log("You entered the wrong answer.");
+            console.log("You have chosen the wrong answer option.");
         }
         //return function () { if (score !== 0) return score };
+        return score;
     }
 
     function askRandomQuestion(question_number, question_x) {
         question_x.askQuestion(question_number);
 
         while (true) {
-            var answer_x = prompt("Enter the number of correct answer option:");
+            var answer_x = prompt("Enter your answer option number:");
             if (answer_x !== null && answer_x.length >= 1) {
                 break;
             }
         }
 
         if (answer_x && (answer_x.length === 1 && typeof parseInt(answer_x) === "number")) {
-            question_x.printTheAnswerOutcome(answer_x);
+            return question_x.printTheAnswerOutcome(answer_x);
         }
         return answer_x;
 
     }
-    function printLatestScore(scores) {
-        var sum = scores.reduce(function (a, b) {
 
-            return a + b;
+    function calculateScore(score) {
+        return function () {
+            return ++score;
+        }
+    }
 
-        }, 0);
-
+    function printLatestScore(sum) {
         console.log("Latest score: ", sum);
     }
 
     function keepAskingRandomQuestions(questions) {
 
-        var scores = [];
+        // var scores = [];
         var l = -1;
 
         for (var i = 0; ;) {
@@ -348,23 +350,27 @@ c) correct answer (I would use a number for this)
                 var question_x = questions[rand_n];
 
                 var answer = askRandomQuestion(i + 1, question_x);
+                // console.log("Änswer is ", answer);
 
-                if (answer && answer.toLowerCase() === "exit") {
-                    break
-                } else {
-                    scores.push(question_x.score);
-                    printLatestScore(scores);
+                if (typeof answer === "string" && answer.toLowerCase() === "exit") {
+                    break;
+                } else if (answer === 1) {
+                    // scores.push(question_x.score);
+                    if (l == -1) {
+                        var scorer = calculateScore(0);
+                    }
+                    var score = scorer();
                 }
 
+                printLatestScore(score);
+
+
                 l = rand_n;
-                i++
+                i++;
             }
         }
-
     }
 
     keepAskingRandomQuestions(questions);
 
 })();
-
-
