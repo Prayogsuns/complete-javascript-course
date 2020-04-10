@@ -308,11 +308,11 @@ c) correct answer (I would use a number for this)
         } else {
             console.log("You have chosen the wrong answer option.");
         }
-        //return function () { if (score !== 0) return score };
         return score;
     }
 
     function askRandomQuestion(question_number, question_x) {
+
         question_x.askQuestion(question_number);
 
         while (true) {
@@ -329,7 +329,15 @@ c) correct answer (I would use a number for this)
 
     }
 
-    function calculateScore(score) {
+    function calculateQuestionNumber() {
+        var question_number = 0;
+        return function () {
+            return ++question_number;
+        }
+    }
+
+    function calculateScore() {
+        var score = 0;
         return function () {
             return ++score;
         }
@@ -341,24 +349,20 @@ c) correct answer (I would use a number for this)
 
     function keepAskingRandomQuestions(questions) {
 
-        // var scores = [];
         var l = -1;
+        var getQuestionNumber = calculateQuestionNumber();
+        var scorer = calculateScore();
 
-        for (var i = 0; ;) {
+        for (; ;) {
             var rand_n = Math.floor(Math.random() * questions.length);
             if (rand_n != l) {
                 var question_x = questions[rand_n];
 
-                var answer = askRandomQuestion(i + 1, question_x);
-                // console.log("Änswer is ", answer);
+                var answer = askRandomQuestion(getQuestionNumber(), question_x);
 
                 if (typeof answer === "string" && answer.toLowerCase() === "exit") {
                     break;
                 } else if (answer === 1) {
-                    // scores.push(question_x.score);
-                    if (l == -1) {
-                        var scorer = calculateScore(0);
-                    }
                     var score = scorer();
                 }
 
@@ -366,7 +370,6 @@ c) correct answer (I would use a number for this)
 
 
                 l = rand_n;
-                i++;
             }
         }
     }
