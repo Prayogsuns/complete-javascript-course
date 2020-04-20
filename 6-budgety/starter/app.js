@@ -38,7 +38,11 @@ var controller = (function (budgetCtrl, UICtrl) {
         // console.log(event);
 
         if (event.keyCode === 13 || event.which === 13) {
-            console.log('ENTER is pressed');
+
+            // console.log('ENTER is pressed');
+
+            ctrlAddItem();
+
         }
 
     });
