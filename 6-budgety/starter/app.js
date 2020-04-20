@@ -15,9 +15,7 @@ var UIController = (function () {
 // GLOBAL APP CONTROLLER
 var controller = (function (budgetCtrl, UICtrl) {
 
-    document.querySelector('.add__btn').addEventListener('click', function () {
-
-        // console.log('Button was clicked');
+    var ctrlAddItem = function () {
 
         // 1. Get the filled input data
 
@@ -29,7 +27,11 @@ var controller = (function (budgetCtrl, UICtrl) {
 
         // 5. Display the budget in the UI
 
-    });
+        console.log('ctrlAddItem');
+
+    }
+
+    document.querySelector('.add__btn').addEventListener('click', ctrlAddItem);
 
     document.addEventListener('keypress', function (event) {
 
